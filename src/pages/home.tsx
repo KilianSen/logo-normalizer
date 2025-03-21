@@ -1,7 +1,8 @@
 import {ImageCard} from "@/components/ui/ImageCard.tsx";
-import {ArrowRight,} from "lucide-react";
+import {ArrowRight, BoxSelect, Download, X,} from "lucide-react";
 import {motion} from "framer-motion";
 import {SiGithub} from "@icons-pack/react-simple-icons";
+import {Button} from "@/components/ui/button.tsx";
 
 export function Home() {
 	return (
@@ -21,22 +22,32 @@ export function Home() {
 					animate={{ minHeight: "0vh" }}
 					transition={{ duration: 1, ease: "easeInOut" }}
 					
-					className={"flex flex-col items-center justify-center py-2"}>
+					className={"flex flex-col items-center justify-center py-12"}>
 					<h1 className="text-4xl font-bold">Welcome to the Logo Normalizer</h1>
 					<p className="mt-4 text-lg">This tool can help you bring unequal logos into a unified format</p>
 				</motion.div>
 				<div className={"flex items-center justify-center py-2 gap-2"}>
-					<ImageCard src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} />
+					<ImageCard src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} hover={<BoxSelect size={45} color={"white"}/>}/>
 					<ArrowRight size={200}/>
-					<ImageCard src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} />
+					<ImageCard src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} hover={<Download size={45} color={"white"}/>} />
 				</div>
-				<div className={"flex flex-col items-center justify-center py-2 gap-2"}>
+				<div className={"flex flex-col items-center justify-center py-2 gap-10"}>
 					<h1 className="text-4xl font-bold">Bulk</h1>
 					<p className={"mt-4 text-lg"}>
 						Bulk editing is a feature that allows you to edit multiple logos at once.<br/>
 						This can save you time and effort when working with large numbers of logos.<br/>
 						You can select multiple logos and apply the same edits to all of them at once.
 					</p>
+					<div className={"flex w-full gap-2"}>
+						<Button>Add logos</Button>
+						<Button>Clear</Button>
+						<Button>Process</Button>
+					</div>
+					<div className={"grid grid-cols-3 gap-4"}>
+						{[...Array(10)].map((_, i) => (
+							<ImageCard key={i} src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} hover={<X size={45} color={"white"}/>}/>
+						))}
+					</div>
 				</div>
 			</div>
 		</>
