@@ -12,4 +12,7 @@ export default defineConfig({
     },
   },
   base: "/logo-normalizer/",
+  build: {
+    target: "esnext",
+  }
 })
