@@ -10,8 +10,6 @@ export function ImageCard({src, className, hover, onClick, onDrop, dragImage}:{s
 		console.log(drag, !!onDrop)
 	}, [drag]);
 	
-	const showOverlay: boolean = hover
-	
 	return (
 		<div className={cn("relative w-full h-full flex items-center justify-center group", className)} onClick={onClick}>
 			<Conditional condition={!!onDrop} truthy={<DZZ onDrop={(acceptedFiles) => {
