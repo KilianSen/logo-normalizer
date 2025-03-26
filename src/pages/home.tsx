@@ -3,11 +3,14 @@ import {ArrowRight, BoxSelect, Download, Droplets,} from "lucide-react";
 import {motion} from "framer-motion";
 import {SiGithub} from "@icons-pack/react-simple-icons";
 import {MadeIn} from "@/components/ui/MadeIn/src/components/MadeIn.tsx";
-import {useState} from "react";
+import {useState} from "react"
+import {useOpenCV} from "@/lib/opencv/useOpenCV.ts";
+import {processImageExternal as processImage2} from "@/lib/imageProcessing.ts";
 
 export function Home() {
-	const [outImage, setOutImage] = useState("https://picsum.photos/200/300");
+	const [outImage, setOutImage] = useState("");
 	const [inImage, setInImage] = useState("https://picsum.photos/200/300?random=1");
+	const {isLoaded, cv} = useOpenCV()
 	
 	function processImage(files: File[]) {
 		if (files.length === 0) {
@@ -16,8 +19,22 @@ export function Home() {
 		
 		const reader = new FileReader();
 		reader.onload = (event) => {
-			if (event.target?.result) {
-				setOutImage(event.target.result as string);
+			if (event.target?.result && isLoaded) {
+				const image = new Image();
+				image.src = event.target.result as string;
+				image.onload = () => {
+					// convert to b64url
+					const canvas = document.createElement("canvas");
+					canvas.width = image.width;
+					canvas.height = image.height;
+					const ctx = canvas.getContext("2d");
+					ctx!.drawImage(image, 0, 0);
+					const dataUrl = canvas.toDataURL("image/png");
+					
+					processImage2(dataUrl, cv).then((result) => {
+						setOutImage(result);
+					})
+				}
 			}
 		};
 		
@@ -62,28 +79,9 @@ export function Home() {
 				<div className={"flex items-center justify-center py-2 gap-2"}>
 					<ImageCard src={inImage} className={"w-56 aspect-square!"} hover={<BoxSelect size={45} color={"white"}/>} dragImage={<Droplets size={45} color={"white"}/>} onDrop={processImage}/>
 					<ArrowRight size={200}/>
-					<ImageCard src={outImage} className={"w-56 aspect-square!"} hover={<Download size={45} color={"white"}/>} onClick={downloadImage} />
+					<ImageCard src={outImage ?? "WAITING"} className={"w-56 aspect-square!"} hover={(outImage?<Download size={45} color={"white"}/>: undefined)} onClick={(outImage?downloadImage: () => {})} />
 				</div>
 			</div>
 		</>
 	)
 }
-
-// 				<div className={"flex flex-col items-center justify-center py-2 gap-10"}>
-// 					<h1 className="text-4xl font-bold">Bulk</h1>
-// 					<p className={"mt-4 text-lg"}>
-// 						Bulk editing is a feature that allows you to edit multiple logos at once.<br/>
-// 						This can save you time and effort when working with large numbers of logos.<br/>
-// 						You can select multiple logos and apply the same edits to all of them at once.
-// 					</p>
-// 					<div className={"flex w-full gap-2"}>
-// 						<Button>Add logos</Button>
-// 						<Button>Clear</Button>
-// 						<Button>Process</Button>
-// 					</div>
-// 					<div className={"grid grid-cols-3 gap-4"}>
-// 						{[...Array(10)].map((_, i) => (
-// 							<ImageCard key={i} src={"https://picsum.photos/200/300"} className={"w-56 aspect-square!"} hover={<X size={45} color={"white"}/>}/>
-// 						))}
-// 					</div>
-// 				</div>

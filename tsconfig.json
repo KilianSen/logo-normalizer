@@ -6,6 +6,8 @@
   ],
 
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
